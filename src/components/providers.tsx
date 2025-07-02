@@ -7,7 +7,9 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { HTTPException } from "hono/http-exception";
+import { ThemeProvider } from "next-themes";
 import { PropsWithChildren, useState } from "react";
+import { SidebarProvider } from "./ui/sidebar";
 
 export const Providers = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(
@@ -24,9 +26,11 @@ export const Providers = ({ children }: PropsWithChildren) => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <SidebarProvider>{children}</SidebarProvider>
+      </QueryClientProvider>
       <Toaster richColors />
-    </QueryClientProvider>
+    </ThemeProvider>
   );
 };

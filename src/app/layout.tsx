@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
-import { Providers } from "./components/providers";
+
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { Providers } from "@/components/providers";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "JStack App",
@@ -17,9 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Providers>{children}</Providers>
-        </ThemeProvider>
+        <Providers>
+          <AppSidebar />
+          <main>
+            <SidebarTrigger />
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
