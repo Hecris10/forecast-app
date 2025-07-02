@@ -1,5 +1,11 @@
-import { j } from "./jstack"
-import { postRouter } from "./routers/post-router"
+import { InferRouterInputs, InferRouterOutputs } from "jstack";
+import { j } from "./jstack";
+import { countriesRouter } from "./routers/coutries-router";
+import { geocodeRouter } from "./routers/geocode-router";
+import { locationsRouter } from "./routers/locations-router";
+import { postRouter } from "./routers/post-router";
+import { testRouter } from "./routers/test-router";
+import { weatherRouter } from "./routers/weather-router";
 
 /**
  * This is your base API.
@@ -11,7 +17,7 @@ const api = j
   .router()
   .basePath("/api")
   .use(j.defaults.cors)
-  .onError(j.defaults.errorHandler)
+  .onError(j.defaults.errorHandler);
 
 /**
  * This is the main router for your server.
@@ -19,8 +25,19 @@ const api = j
  */
 const appRouter = j.mergeRouters(api, {
   post: postRouter,
-})
+  geocode: geocodeRouter,
+  weather: weatherRouter,
+  locations: locationsRouter,
+  countries: countriesRouter,
+  test: testRouter,
+});
 
-export type AppRouter = typeof appRouter
+type InferInput = InferRouterInputs<AppRouter>;
+type InferOutput = InferRouterOutputs<AppRouter>;
 
-export default appRouter
+export type InputAddressToCoords = InferInput["geocode"]["addressToCoords"];
+export type OutputAddressToCoords = InferOutput["geocode"]["addressToCoords"];
+
+export type AppRouter = typeof appRouter;
+
+export default appRouter;

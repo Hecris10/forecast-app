@@ -1,7 +1,8 @@
-import { getServerAuthSection } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { HTTPException } from "hono/http-exception";
 import { jstack } from "jstack";
+import { headers } from "next/headers";
 
 interface Env {
   Bindings: {
@@ -25,21 +26,21 @@ const databaseMiddleware = j.middleware(async ({ c, next }) => {
   return await next({ db });
 });
 
-const authMiddleware = j.middleware(async ({ c, next }) => {
-  // Mocked user authentication check...
+const authMiddleware = j.middleware(async ({ next }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const session = await getServerAuthSection();
-
-  if (!session || !session.user) {
+  if (!session || !session.session) {
     throw new HTTPException(401, {
       message: "Unauthorized, sign in to continue.",
     });
   }
 
-  // 👇 Attach user to `ctx` object
-  await next({ session: session.user, db });
+  return await next({ session });
 });
+
 export const publicProcedure = j.procedure.use(databaseMiddleware);
 export const protectedProcedure = j.procedure
-  .use(authMiddleware)
-  .use(databaseMiddleware);
+  .use(databaseMiddleware)
+  .use(authMiddleware);
