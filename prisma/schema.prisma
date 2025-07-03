@@ -20,6 +20,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  weatherHistory WeatherHistory[]
 
   @@unique([email])
   @@map("user")
@@ -68,6 +69,21 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model WeatherHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address     String
+  latitude    Float
+  longitude   Float
+  temperature Float?
+  unit        String   @default("F")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("weather_history")
 }
 
 

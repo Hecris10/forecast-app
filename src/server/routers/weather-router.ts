@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { j, publicProcedure } from "../jstack";
+import { j, privateProcedure } from "../jstack";
 
 // Types for National Weather Service API
 interface WeatherResponse {
@@ -33,20 +33,18 @@ interface PointsResponse {
 const latLngSchema = z.object({
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
+  address: z.string().optional(),
 });
 
 export const weatherRouter = j.router({
-  getForecast: publicProcedure
+  getForecast: privateProcedure
     .input(latLngSchema)
-    .mutation(async ({ c, input }) => {
+    .query(async ({ c, input, ctx }) => {
       try {
-        const { latitude, longitude } = input;
-
-        console.log("Weather request for:", { latitude, longitude });
+        const { latitude, longitude, address } = input;
 
         // Get weather data from National Weather Service API
         const url = `https://api.weather.gov/points/${latitude},${longitude}`;
-        console.log("Weather API URL:", url);
 
         const pointsResponse = await fetch(url);
 
@@ -57,8 +55,6 @@ export const weatherRouter = j.router({
         const pointsData = (await pointsResponse.json()) as PointsResponse;
         const forecastUrl = pointsData.properties.forecast;
 
-        console.log("Forecast URL:", forecastUrl);
-
         const forecastResponse = await fetch(forecastUrl);
 
         if (!forecastResponse.ok) {
@@ -66,6 +62,24 @@ export const weatherRouter = j.router({
         }
 
         const weatherData = (await forecastResponse.json()) as WeatherResponse;
+
+        // Save to history if address is provided
+        if (address) {
+          try {
+            await ctx.db.weatherHistory.create({
+              data: {
+                userId: ctx.auth.session.user.id,
+                address,
+                latitude,
+                longitude,
+                unit: "F", // Default unit
+              },
+            });
+          } catch (historyError) {
+            console.error("Error saving history:", historyError);
+            // Don't fail the weather request if history saving fails
+          }
+        }
 
         return c.superjson({
           success: true,
@@ -76,6 +90,69 @@ export const weatherRouter = j.router({
         console.error("Weather forecast error:", error);
         throw new Error(
           `Weather forecast failed: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
+        );
+      }
+    }),
+
+  getHistory: privateProcedure.query(async ({ c, ctx }) => {
+    try {
+      const history = await ctx.db.weatherHistory.findMany({
+        where: {
+          userId: ctx.auth.session.user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 50, // Limit to last 50 searches
+      });
+
+      return c.superjson({
+        success: true,
+        data: history,
+      });
+    } catch (error) {
+      console.error("Error fetching history:", error);
+      throw new Error(
+        `Failed to fetch history: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    }
+  }),
+
+  deleteHistory: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ c, input, ctx }) => {
+      try {
+        const { id } = input;
+
+        // Ensure the user owns this history entry
+        const historyEntry = await ctx.db.weatherHistory.findFirst({
+          where: {
+            id,
+            userId: ctx.auth.session.user.id,
+          },
+        });
+
+        if (!historyEntry) {
+          return c.json({ error: "History entry not found" }, 404);
+        }
+
+        await ctx.db.weatherHistory.delete({
+          where: {
+            id,
+          },
+        });
+
+        return c.superjson({
+          success: true,
+        });
+      } catch (error) {
+        console.error("Error deleting history:", error);
+        throw new Error(
+          `Failed to delete history: ${
             error instanceof Error ? error.message : "Unknown error"
           }`
         );

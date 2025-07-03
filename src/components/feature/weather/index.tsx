@@ -4,9 +4,6 @@ import { useFindAddresses } from "@/hooks/useFindAddresses";
 import { InputAddressToCoords } from "@/server";
 import { AddressResults } from "./address-results";
 import { ErrorDisplay } from "./error-display";
-import { LoadingSpinner } from "./loading-spinner";
-import { useWeather } from "./use-weather";
-import { WeatherForecast } from "./weather-forecast";
 import { WeatherHeader } from "./weather-header";
 import { WeatherSearch } from "./weather-search";
 
@@ -19,17 +16,6 @@ export function Weather() {
     isError: isErrorFindAddresses,
     errorMessage: addressErrorMessage,
   } = useFindAddresses();
-
-  const {
-    selectedAddress,
-    unit,
-    setUnit,
-    forecastData,
-    isPendingForecast,
-    isForecastError,
-    forecastError,
-    handleSelectAddress,
-  } = useWeather();
 
   const handleAddressSearch = (values: InputAddressToCoords) => {
     findAddresses(values);
@@ -67,8 +53,7 @@ export function Weather() {
         addresses.addressesList.length > 0 && (
           <AddressResults
             addresses={addresses.addressesList}
-            selectedAddress={selectedAddress}
-            onSelectAddress={handleSelectAddress}
+            selectedAddress={null}
           />
         )}
 
@@ -86,38 +71,6 @@ export function Weather() {
             showRetry={false}
           />
         )}
-
-      {/* Loading State for Weather Forecast */}
-      {isPendingForecast && (
-        <LoadingSpinner message="Loading weather forecast..." />
-      )}
-
-      {/* Error Display for Weather Forecast */}
-      {isForecastError && (
-        <ErrorDisplay
-          message={
-            forecastError instanceof Error
-              ? `Failed to load weather forecast: ${forecastError.message}`
-              : "Failed to load weather forecast. Please try again."
-          }
-          onRetry={() => {
-            // Retry the weather forecast for the selected address
-            if (selectedAddress) {
-              handleSelectAddress(selectedAddress);
-            }
-          }}
-        />
-      )}
-
-      {/* Weather Forecast Display */}
-      {forecastData && (
-        <WeatherForecast
-          forecastData={forecastData}
-          selectedAddress={selectedAddress}
-          unit={unit}
-          onUnitChange={setUnit}
-        />
-      )}
     </div>
   );
 }

@@ -20,8 +20,6 @@ export const geocodeRouter = j.router({
         const encodedAddress = encodeURIComponent(address);
         const url = `https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=${encodedAddress}&benchmark=2020&vintage=2020&format=json`;
 
-        console.log("Geocoding URL:", url);
-
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -33,16 +31,12 @@ export const geocodeRouter = j.router({
 
         const data: CensusGeocodeResponse = await response.json();
 
-        console.log("Geocoding response:", JSON.stringify(data, null, 2));
-
         if (
           !data.result.addressMatches ||
           data.result.addressMatches.length === 0
         ) {
           // Try with a more generic search if no exact match found
           const suggestions = [];
-
-          console.log({ data });
 
           // If the address doesn't contain city/state, suggest adding them
           if (

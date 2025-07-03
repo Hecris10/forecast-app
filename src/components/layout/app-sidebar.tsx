@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { Clock, Home } from "lucide-react";
+import { Clock, Cloud, Home } from "lucide-react";
 import Link from "next/link";
 import { ForecastAppLogo } from "../forecast-app-logo";
 import { SignOut } from "../sign-out";
@@ -23,8 +23,13 @@ const items = [
     icon: Home,
   },
   {
+    title: "Weather",
+    url: "/weather",
+    icon: Cloud,
+  },
+  {
     title: "History",
-    url: "#",
+    url: "/history",
     icon: Clock,
   },
 ];

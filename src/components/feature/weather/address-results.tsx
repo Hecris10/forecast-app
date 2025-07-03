@@ -2,18 +2,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CensusGeocodeAddressMatch } from "@/server/services/geocode";
 import { MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AddressResultsProps {
   addresses: CensusGeocodeAddressMatch[];
   selectedAddress: CensusGeocodeAddressMatch | null;
-  onSelectAddress: (address: CensusGeocodeAddressMatch) => void;
 }
 
 export function AddressResults({
   addresses,
   selectedAddress,
-  onSelectAddress,
 }: AddressResultsProps) {
+  const router = useRouter();
+
+  const handleSelectAddress = (address: CensusGeocodeAddressMatch) => {
+    // Navigate to forecast page with address parameters
+    const url = `/weather/forecast?address=${encodeURIComponent(
+      address.matchedAddress
+    )}&lat=${address.coordinates.y}&lng=${address.coordinates.x}`;
+    router.push(url);
+  };
+
   if (!addresses || addresses.length === 0) {
     return (
       <Card className="mb-8">
@@ -43,7 +52,7 @@ export function AddressResults({
                   : "outline"
               }
               className="justify-start w-full text-left"
-              onClick={() => onSelectAddress(address)}
+              onClick={() => handleSelectAddress(address)}
             >
               {address.matchedAddress}
             </Button>
