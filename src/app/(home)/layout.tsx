@@ -6,8 +6,8 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "JStack App",
-  description: "Created using JStack",
+  title: "Weather App",
+  description: "Weather App",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
