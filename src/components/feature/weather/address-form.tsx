@@ -83,11 +83,13 @@ export default function AddressForm({
               <SelectValue placeholder="Country" />
             </SelectTrigger>
             <SelectContent>
-              {countries?.map((country) => (
-                <SelectItem key={country.code} value={country.name}>
-                  {country.name}
-                </SelectItem>
-              ))}
+              {Array.isArray(countries)
+                ? countries.map((country: { name: string; code: string }) => (
+                    <SelectItem key={country.code} value={country.name}>
+                      {country.name}
+                    </SelectItem>
+                  ))
+                : null}
             </SelectContent>
           </Select>
           {errors.country && (
@@ -113,17 +115,18 @@ export default function AddressForm({
             accuracy
           </li>
           <li>
-            <strong>Best results with US addresses:</strong> "123 Main St, New
-            York, NY, 10001"
+            <strong>Best results with US addresses:</strong>{" "}
+            {`"123 Main St, New
+            York, NY, 10001"`}
           </li>
           <li>
             <strong>International addresses:</strong> May work but results vary
             by region
           </li>
           <li>
-            Example: "1600 Pennsylvania Ave NW, Washington, DC, United States"
+            {`Example: "1600 Pennsylvania Ave NW, Washington, DC, United States"`}
           </li>
-          <li>Example: "123 Main St, Toronto, ON, Canada"</li>
+          <li>{`Example: "123 Main St, Toronto, ON, Canada"`}</li>
         </ul>
       </div>
     </form>

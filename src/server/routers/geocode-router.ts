@@ -1,4 +1,5 @@
 import { addressSchema } from "@/lib/schemas";
+import { ContentfulStatusCode } from "hono/utils/http-status";
 import { j, publicProcedure } from "../jstack";
 import {
   CensusGeocodeAddressMatch,
@@ -25,7 +26,7 @@ export const geocodeRouter = j.router({
         if (!response.ok) {
           return c.json(
             { error: `Geocoding API error: ${response.status}` },
-            response.status as any
+            response.status as unknown as ContentfulStatusCode
           );
         }
 

@@ -25,8 +25,8 @@ export const countriesRouter = j.router({
         .sort((a: Country, b: Country) => a.name.localeCompare(b.name));
 
       return c.superjson(countries);
-    } catch (error) {
-      throw new Error("Failed to fetch countries");
+    } catch  {
+      return c.json({ error: "Failed to fetch countries" }, 500);
     }
   }),
 });

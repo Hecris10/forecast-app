@@ -5,8 +5,6 @@ const authRoutes = ["/sign-in", "/sign-up"];
 
 
 export async function middleware(request: NextRequest) {
-  const route = request.nextUrl.pathname;
-
   const sessionCookie = getSessionCookie(request);
 
   const isAuthRoute = authRoutes.some((route) =>

@@ -6,13 +6,12 @@ import { useRouter } from "next/navigation";
 
 interface AddressResultsProps {
   addresses: CensusGeocodeAddressMatch[];
-  selectedAddress: CensusGeocodeAddressMatch | null;
   isLoading: boolean;
 }
 
 export function AddressResults({
   addresses,
-  selectedAddress,
+
   isLoading,
 }: AddressResultsProps) {
   const router = useRouter();

@@ -75,8 +75,8 @@ export const weatherRouter = j.router({
                 unit: "F", // Default unit
               },
             });
-          } catch (historyError) {
-            // Don't fail the weather request if history saving fails
+          } catch  {
+            return c.superjson("Error saving history", 500);
           }
         }
 
@@ -134,7 +134,7 @@ export const weatherRouter = j.router({
         });
 
         if (!historyEntry) {
-          return c.json({ error: "History entry not found" }, 404);
+          return c.json("History entry not found", 404);
         }
 
         await ctx.db.weatherHistory.delete({

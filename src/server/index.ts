@@ -32,6 +32,10 @@ type InferOutput = InferRouterOutputs<AppRouter>;
 export type InputAddressToCoords = InferInput["geocode"]["addressToCoords"];
 export type OutputAddressToCoords = InferOutput["geocode"]["addressToCoords"];
 
+export type InputGetHistory = InferInput["weather"]["getHistory"];
+export type OutputGetHistory = InferOutput["weather"]["getHistory"];
+export type History = OutputGetHistory["data"][number];
+
 export type AppRouter = typeof appRouter;
 
 export default appRouter;

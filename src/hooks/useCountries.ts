@@ -13,7 +13,7 @@ export const useCountries = () => {
         const countries = await response.json();
 
         return countries;
-      } catch (error) {
+      } catch {
         toast.error("Failed to fetch countries");
         return [];
       }

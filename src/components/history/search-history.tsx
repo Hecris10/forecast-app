@@ -19,19 +19,20 @@ import { Input } from "@/components/ui/input";
 import { MotionDiv } from "@/components/ui/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useHistory } from "@/hooks/use-history";
+import { History } from "@/server";
 import { formatDistanceToNow } from "date-fns";
 import {
   Calendar,
   Clock,
   Filter,
-  History,
+  HistoryIcon,
   MapPin,
   Search,
   Thermometer,
   Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export default function SearchHistory() {
   const {
@@ -45,9 +46,9 @@ export default function SearchHistory() {
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
-  const [itemToDelete, setItemToDelete] = useState<any>(null);
+  const [itemToDelete, setItemToDelete] = useState<History | null>(null);
 
-  const handleHistoryItemClick = (item: any) => {
+  const handleHistoryItemClick = (item: History) => {
     const url = `/weather/forecast?address=${encodeURIComponent(
       item.address
     )}&lat=${item.latitude}&lng=${item.longitude}`;
@@ -55,13 +56,13 @@ export default function SearchHistory() {
   };
 
   // Filter history items based on search query
-  const filteredHistory = useMemo(() => {
+  const filterHistory = () => {
     if (!searchQuery.trim()) {
       return history;
     }
 
     const lowerCaseQuery = searchQuery.toLowerCase().trim();
-    return history.filter((item: any) => {
+    return history.filter((item: History) => {
       return (
         item.address.toLowerCase().includes(lowerCaseQuery) ||
         item.latitude.toString().includes(lowerCaseQuery) ||
@@ -73,9 +74,11 @@ export default function SearchHistory() {
           .includes(lowerCaseQuery)
       );
     });
-  }, [history, searchQuery]);
+  };
 
-  const handleDeleteClick = (e: React.MouseEvent, item: any) => {
+  const filteredHistory = filterHistory();
+
+  const handleDeleteClick = (e: React.MouseEvent, item: History) => {
     e.stopPropagation();
     setItemToDelete(item);
   };
@@ -135,7 +138,7 @@ export default function SearchHistory() {
       <MotionDiv className="text-center space-y-2" variants={itemVariants}>
         <div className="flex items-center justify-center gap-3">
           <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-            <History className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <HistoryIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Search History
@@ -263,7 +266,7 @@ export default function SearchHistory() {
             >
               <Search className="w-8 h-8 text-gray-400 mx-auto" />
               <p className="text-gray-600 dark:text-gray-400">
-                No results found for "{searchQuery}"
+                {` No results found for "${searchQuery}"`}
               </p>
               <Button
                 variant="outline"
@@ -281,7 +284,7 @@ export default function SearchHistory() {
             <MotionDiv variants={containerVariants}>
               <ScrollArea className="h-[600px] w-full rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="space-y-3 p-4">
-                  {filteredHistory.map((item: any, index: number) => (
+                  {filteredHistory.map((item: History, index: number) => (
                     <MotionDiv
                       key={item.id}
                       className="group relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer"
@@ -343,7 +346,10 @@ export default function SearchHistory() {
                         </div>
 
                         {/* Delete Button */}
-                        <AlertDialog>
+                        <AlertDialog
+                          open={!!itemToDelete}
+                          onOpenChange={() => setItemToDelete(null)}
+                        >
                           <AlertDialogTrigger asChild>
                             <Button
                               variant="ghost"
@@ -361,8 +367,8 @@ export default function SearchHistory() {
                                 Delete Search History
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete the search for "
-                                {item.address}"? This action cannot be undone.
+                                {`Are you sure you want to delete the search for "
+                                ${item.address}"? This action cannot be undone.`}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -400,8 +406,7 @@ export default function SearchHistory() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Search History</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the search for "
-              {itemToDelete?.address}"? This action cannot be undone.
+              {`Are you sure you want to delete the search for "${itemToDelete?.address}"? This action cannot be undone.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

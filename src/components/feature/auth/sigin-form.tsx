@@ -75,7 +75,7 @@ export const SignInForm = () => {
 
             {
               callbackURL: "/",
-              onRequest: (ctx) => {
+              onRequest: () => {
                 setLoading(true);
               },
               onResponse: (ctx) => {
@@ -83,6 +83,7 @@ export const SignInForm = () => {
                   router.push("/");
                   return;
                 }
+
                 setLoading(false);
               },
             }

@@ -36,7 +36,7 @@ export const useFindAddresses = () => {
         toast.error("Failed to find addresses", {
           description: errorData.error,
         });
-      } catch (parseError) {
+      } catch {
         // Fallback if JSON parsing fails
         toast.error("Failed to find addresses", {
           description: "Please try again",

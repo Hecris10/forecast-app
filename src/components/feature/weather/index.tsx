@@ -56,7 +56,6 @@ export function Weather() {
           <div className="mt-8">
             <AddressResults
               addresses={addresses.addressesList}
-              selectedAddress={null}
               isLoading={false}
             />
           </div>
