@@ -19,7 +19,7 @@ import { ThemeSwitcher } from "../theme-switcher";
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
@@ -33,7 +33,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <ForecastAppLogo />
+        <ForecastAppLogo size="sm" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

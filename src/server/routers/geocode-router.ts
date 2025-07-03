@@ -25,7 +25,10 @@ export const geocodeRouter = j.router({
         const response = await fetch(url);
 
         if (!response.ok) {
-          throw new Error(`Geocoding API error: ${response.status}`);
+          return c.json(
+            { error: `Geocoding API error: ${response.status}` },
+            response.status as any
+          );
         }
 
         const data: CensusGeocodeResponse = await response.json();
@@ -39,6 +42,8 @@ export const geocodeRouter = j.router({
           // Try with a more generic search if no exact match found
           const suggestions = [];
 
+          console.log({ data });
+
           // If the address doesn't contain city/state, suggest adding them
           if (
             !address.toLowerCase().includes(",") &&
@@ -49,20 +54,20 @@ export const geocodeRouter = j.router({
             );
           }
 
-          throw new Error(
-            `No address matches found. ${suggestions.join(
-              " "
-            )} Please provide a complete address with city and state.`
+          return c.json(
+            {
+              error: `No address matches found. ${suggestions.join(
+                " "
+              )} Please provide a complete address with city and state.`,
+            },
+            400
           );
         }
 
         const match = data.result.addressMatches;
 
         if (!match) {
-          return c.superjson({
-            success: false,
-            error: "No address matches found",
-          });
+          return c.json("No address matches found", 400);
         }
 
         const addressesList: CensusGeocodeAddressMatch[] = match.map((m) => ({
@@ -80,10 +85,13 @@ export const geocodeRouter = j.router({
         });
       } catch (error) {
         console.error("Geocoding error:", error);
-        throw new Error(
-          `Geocoding failed: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`
+        return c.json(
+          {
+            error: `Geocoding failed: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`,
+          },
+          500
         );
       }
     }),

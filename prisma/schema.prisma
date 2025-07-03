@@ -20,7 +20,6 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  savedLocations SavedLocation[]
 
   @@unique([email])
   @@map("user")
@@ -72,28 +71,6 @@ model Verification {
 }
 
 
-model SavedLocation {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String   // User-friendly name (e.g., "Home", "Work")
-  address   String   // Full address
-  latitude  Float
-  longitude Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@map("saved_location")
-}
 
-model WeatherCache {
-  id        String   @id @default(uuid())
-  latitude  Float
-  longitude Float
-  data      Json     // Cached weather data
-  expiresAt DateTime // Cache expiration
-  createdAt DateTime @default(now())
 
-  @@unique([latitude, longitude])
-  @@map("weather_cache")
-}

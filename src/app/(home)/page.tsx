@@ -1,17 +1,16 @@
+import { ForecastAppLogo } from "@/components/forecast-app-logo";
 import { Button } from "@/components/ui/button";
 import { Cloud, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
   return (
-    <main className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex-col items-center justify-center relative isolate">
-      <div className="absolute inset-0 -z-10 opacity-50 mix-blend-soft-light bg-[url('/noise.svg')] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" />
+    <div className="flex w-full min-h-screen  flex-col items-center justify-center">
       <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Weather Forecast App
-          </h1>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl">
+        <div className="text-center flex flex-col gap-2 ">
+          <ForecastAppLogo className="mx-auto" size="lg" />
+
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
             Get detailed 7-day weather forecasts for any US address using the
             National Weather Service API and US Census Geocoding service.
           </p>
@@ -38,9 +37,9 @@ export default async function Home() {
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>Built with Next.js, JStack, Prisma, and ShadCN UI</p>
+          <p>2025</p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

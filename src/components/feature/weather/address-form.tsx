@@ -104,7 +104,7 @@ export default function AddressForm({
       >
         {isPendingFindAddresses ? "Searching..." : "Search"}
       </Button>
-      <div className="mt-3 text-sm text-gray-600">
+      <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
         <p className="font-medium mb-1">Address Format Tips:</p>
         <ul className="list-disc list-inside space-y-1">
           <li>Street address and country are required</li>

@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Providers } from "@/components/providers";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import "./globals.css";
-
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "JStack App",
@@ -19,11 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased">
+      <body className="antialiased w-screen">
         <Providers>
           <AppSidebar />
-          <main>
-            <SidebarTrigger />
+          <main className="w-full relative">
+            <SidebarTrigger className="absolute top-4 left-4" />
             {children}
           </main>
         </Providers>

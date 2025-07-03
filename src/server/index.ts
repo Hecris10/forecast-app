@@ -2,9 +2,6 @@ import { InferRouterInputs, InferRouterOutputs } from "jstack";
 import { j } from "./jstack";
 import { countriesRouter } from "./routers/coutries-router";
 import { geocodeRouter } from "./routers/geocode-router";
-import { locationsRouter } from "./routers/locations-router";
-import { postRouter } from "./routers/post-router";
-import { testRouter } from "./routers/test-router";
 import { weatherRouter } from "./routers/weather-router";
 
 /**
@@ -24,12 +21,9 @@ const api = j
  * All routers in /server/routers should be added here manually.
  */
 const appRouter = j.mergeRouters(api, {
-  post: postRouter,
   geocode: geocodeRouter,
   weather: weatherRouter,
-  locations: locationsRouter,
   countries: countriesRouter,
-  test: testRouter,
 });
 
 type InferInput = InferRouterInputs<AppRouter>;
