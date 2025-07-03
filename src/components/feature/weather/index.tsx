@@ -22,27 +22,31 @@ export function Weather() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <>
+      {/* Header - Always visible */}
       <WeatherHeader />
 
+      {/* Search Form - Always visible */}
       <WeatherSearch
         isPendingFindAddresses={isPendingFindAddresses}
         onSubmit={handleAddressSearch}
       />
 
-      {/* Error Display for Address Search */}
+      {/* Error State - Address Search Error */}
       {isErrorFindAddresses && (
-        <ErrorDisplay
-          message={addressErrorMessage || undefined}
-          onRetry={() => {
-            // Retry the last search if we have the form data
-            // This would need to be implemented with form state management
-          }}
-          showRetry={false}
-        />
+        <div className="mt-8">
+          <ErrorDisplay
+            message={addressErrorMessage || undefined}
+            onRetry={() => {
+              // Retry the last search if we have the form data
+              // This would need to be implemented with form state management
+            }}
+            showRetry={false}
+          />
+        </div>
       )}
 
-      {/* Address Results */}
+      {/* Success State - Address Results Found */}
       {hasRequestedAddresses &&
         !isErrorFindAddresses &&
         addresses &&
@@ -51,13 +55,15 @@ export function Weather() {
         addresses.success &&
         addresses.addressesList &&
         addresses.addressesList.length > 0 && (
-          <AddressResults
-            addresses={addresses.addressesList}
-            selectedAddress={null}
-          />
+          <div className="mt-8">
+            <AddressResults
+              addresses={addresses.addressesList}
+              selectedAddress={null}
+            />
+          </div>
         )}
 
-      {/* No Results - when search succeeds but no addresses found */}
+      {/* No Results State - Search succeeded but no addresses found */}
       {hasRequestedAddresses &&
         !isErrorFindAddresses &&
         addresses &&
@@ -66,11 +72,24 @@ export function Weather() {
         addresses.success &&
         addresses.addressesList &&
         addresses.addressesList.length === 0 && (
-          <ErrorDisplay
-            message="No addresses found for this search. Please try a different address."
-            showRetry={false}
-          />
+          <div className="mt-8">
+            <ErrorDisplay
+              message="No addresses found for this search. Please try a different address."
+              showRetry={false}
+            />
+          </div>
         )}
-    </div>
+
+      {/* Initial State - No search performed yet */}
+      {!hasRequestedAddresses && !isErrorFindAddresses && (
+        <div className="mt-8 text-center">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+            <p className="text-gray-600 dark:text-gray-400">
+              Enter an address above to get started with your weather forecast.
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
