@@ -86,7 +86,6 @@ export function WeatherForecast({
             </p>
           </div>
 
-          {/* Temperature Unit Toggle */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <div className="p-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -103,8 +102,8 @@ export function WeatherForecast({
                 onClick={() => onUnitChange("F")}
                 className={`px-3 py-1 text-xs font-medium transition-all duration-200 ${
                   unit === "F"
-                    ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600"
                 }`}
               >
                 °F
@@ -115,8 +114,8 @@ export function WeatherForecast({
                 onClick={() => onUnitChange("C")}
                 className={`px-3 py-1 text-xs font-medium transition-all duration-200 ${
                   unit === "C"
-                    ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white dark:hover:bg-gray-600"
                 }`}
               >
                 °C

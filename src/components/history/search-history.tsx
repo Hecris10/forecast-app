@@ -1,38 +1,25 @@
 "use client";
 
-import { ErrorDisplay } from "@/components/feature/weather/error-display";
 import { LoadingSpinner } from "@/components/feature/weather/loading-spinner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { MotionDiv } from "@/components/ui/motion";
+import {
+  containerVariants,
+  itemVariants,
+  MotionDiv,
+} from "@/components/ui/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useHistory } from "@/hooks/use-history";
 import { History } from "@/server";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Calendar,
-  Clock,
-  Filter,
-  HistoryIcon,
-  MapPin,
-  Search,
-  Thermometer,
-  Trash2,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Filter, Search } from "lucide-react";
 import { useState } from "react";
+import { DeleteHistoryDialog } from "./delete-history-dialog";
+import { HistoryEmpty } from "./history-empty";
+import { HistoryError } from "./history-error";
+import { HistoryHeader } from "./history-header";
+import { HistoryItem } from "./history-item";
+import { HistorySearchBar } from "./history-search-bar";
 
 export default function SearchHistory() {
   const {
@@ -42,20 +29,9 @@ export default function SearchHistory() {
     deleteHistoryItem,
     isDeleting,
   } = useHistory();
-  const router = useRouter();
-
-  // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [itemToDelete, setItemToDelete] = useState<History | null>(null);
 
-  const handleHistoryItemClick = (item: History) => {
-    const url = `/weather/forecast?address=${encodeURIComponent(
-      item.address
-    )}&lat=${item.latitude}&lng=${item.longitude}`;
-    router.push(url);
-  };
-
-  // Filter history items based on search query
   const filterHistory = () => {
     if (!searchQuery.trim()) {
       return history;
@@ -78,8 +54,7 @@ export default function SearchHistory() {
 
   const filteredHistory = filterHistory();
 
-  const handleDeleteClick = (e: React.MouseEvent, item: History) => {
-    e.stopPropagation();
+  const handleDeleteClick = (item: History) => {
     setItemToDelete(item);
   };
 
@@ -94,39 +69,6 @@ export default function SearchHistory() {
     setItemToDelete(null);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
-  const historyItemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.4,
-      },
-    },
-  };
-
   return (
     <MotionDiv
       className="space-y-6"
@@ -134,20 +76,7 @@ export default function SearchHistory() {
       initial="hidden"
       animate="visible"
     >
-      {/* Header */}
-      <MotionDiv className="text-center space-y-2" variants={itemVariants}>
-        <div className="flex items-center justify-center gap-3">
-          <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-            <HistoryIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Search History
-          </h1>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400">
-          Your recent weather searches and forecasts
-        </p>
-      </MotionDiv>
+      <HistoryHeader />
 
       {/* Loading State */}
       {isLoadingHistory && (
@@ -162,66 +91,22 @@ export default function SearchHistory() {
       )}
 
       {/* Error State */}
-      {historyError && (
-        <MotionDiv
-          className="flex flex-col items-center justify-center py-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <ErrorDisplay
-            error="Failed to load history. Please try again."
-            onRetry={() => window.location.reload()}
-          />
-        </MotionDiv>
-      )}
+      {historyError && <HistoryError />}
 
       {/* Empty State */}
       {!isLoadingHistory && !historyError && history.length === 0 && (
-        <MotionDiv
-          className="flex flex-col items-center justify-center py-16 space-y-4"
-          variants={itemVariants}
-        >
-          <MotionDiv
-            className="p-6 bg-gray-100 dark:bg-gray-800 rounded-full"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Clock className="w-12 h-12 text-gray-400 dark:text-gray-500" />
-          </MotionDiv>
-          <MotionDiv
-            className="text-center space-y-2"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              No searches yet
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 max-w-md">
-              Start searching for weather forecasts and your history will appear
-              here
-            </p>
-          </MotionDiv>
-        </MotionDiv>
+        <HistoryEmpty />
       )}
 
       {/* History Items */}
       {!isLoadingHistory && !historyError && history.length > 0 && (
         <MotionDiv className="space-y-4" variants={itemVariants}>
-          {/* Search Filter */}
           <MotionDiv className="relative" variants={itemVariants}>
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400" />
-            </div>
-            <Input
-              type="text"
-              placeholder="Search by address, coordinates, temperature, or date..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <HistorySearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
             />
+
             {searchQuery && (
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                 <Button
@@ -279,116 +164,17 @@ export default function SearchHistory() {
             </MotionDiv>
           )}
 
-          {/* History List */}
           {filteredHistory.length > 0 && (
             <MotionDiv variants={containerVariants}>
               <ScrollArea className="h-[600px] w-full rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="space-y-3 p-4">
                   {filteredHistory.map((item: History, index: number) => (
-                    <MotionDiv
-                      key={item.id}
-                      className="group relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer"
-                      onClick={() => handleHistoryItemClick(item)}
-                      variants={historyItemVariants}
-                      custom={index}
-                      whileHover={{
-                        scale: 1.02,
-                        y: -2,
-                        transition: { duration: 0.2 },
-                      }}
-                      whileTap={{
-                        scale: 0.98,
-                        transition: { duration: 0.1 },
-                      }}
-                    >
-                      {/* Main Content */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 space-y-3">
-                          {/* Address */}
-                          <div className="flex items-center gap-2">
-                            <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                              <MapPin className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <span className="font-medium text-gray-900 dark:text-white text-sm">
-                              {item.address}
-                            </span>
-                            <Search className="h-3 w-3 text-gray-400" />
-                          </div>
-
-                          {/* Metadata */}
-                          <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="h-3 w-3" />
-                              <span>
-                                {formatDistanceToNow(new Date(item.createdAt), {
-                                  addSuffix: true,
-                                })}
-                              </span>
-                            </div>
-
-                            {item.temperature && (
-                              <div className="flex items-center gap-1.5">
-                                <Thermometer className="h-3 w-3" />
-                                <span>
-                                  {item.temperature}°{item.unit}
-                                </span>
-                              </div>
-                            )}
-
-                            <Badge
-                              variant="secondary"
-                              className="text-xs bg-gray-100/80 dark:bg-gray-700/80 text-gray-700 dark:text-gray-300 border-0"
-                            >
-                              {item.latitude.toFixed(4)},{" "}
-                              {item.longitude.toFixed(4)}
-                            </Badge>
-                          </div>
-                        </div>
-
-                        {/* Delete Button */}
-                        <AlertDialog
-                          open={!!itemToDelete}
-                          onOpenChange={() => setItemToDelete(null)}
-                        >
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => handleDeleteClick(e, item)}
-                              disabled={isDeleting}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-red-500 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 p-2 h-8 w-8"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete Search History
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {`Are you sure you want to delete the search for "
-                                ${item.address}"? This action cannot be undone.`}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel onClick={handleCancelDelete}>
-                                Cancel
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={handleConfirmDelete}
-                                className="bg-red-600 hover:bg-red-700 text-white"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-
-                      {/* Hover Effect Overlay */}
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
-                    </MotionDiv>
+                    <HistoryItem
+                      historyItem={item}
+                      index={index}
+                      handleDeleteClick={() => handleDeleteClick(item)}
+                      isDeleting={isDeleting}
+                    />
                   ))}
                 </div>
               </ScrollArea>
@@ -398,30 +184,12 @@ export default function SearchHistory() {
       )}
 
       {/* Alert Dialog for Deletion Confirmation */}
-      <AlertDialog
-        open={!!itemToDelete}
-        onOpenChange={() => setItemToDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Search History</AlertDialogTitle>
-            <AlertDialogDescription>
-              {`Are you sure you want to delete the search for "${itemToDelete?.address}"? This action cannot be undone.`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancelDelete}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmDelete}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteHistoryDialog
+        itemToDelete={itemToDelete}
+        setItemToDelete={setItemToDelete}
+        handleCancelDelete={handleCancelDelete}
+        handleConfirmDelete={handleConfirmDelete}
+      />
     </MotionDiv>
   );
 }
