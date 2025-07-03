@@ -9,7 +9,7 @@ import { CensusGeocodeAddressMatch } from "@/server/services/geocode";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-export default function SevenDaysForeCast() {
+export default function SevenDaysForecast() {
   const searchParams = useSearchParams();
   const [unit, setUnit] = useState<TemperatureUnit>("F");
 
@@ -52,10 +52,7 @@ export default function SevenDaysForeCast() {
       {/* Missing Parameters State */}
       {(!address || !latitude || !longitude) && (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <ErrorDisplay
-            message="Missing address parameters. Please search for an address first."
-            showRetry={false}
-          />
+          <ErrorDisplay error="Missing address parameters. Please search for an address first." />
         </div>
       )}
 
@@ -70,7 +67,7 @@ export default function SevenDaysForeCast() {
       {address && latitude && longitude && isForecastError && (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
           <ErrorDisplay
-            message={
+            error={
               forecastError instanceof Error
                 ? `Failed to load weather forecast: ${forecastError.message}`
                 : "Failed to load weather forecast. Please try again."

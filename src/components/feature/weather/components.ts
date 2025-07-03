@@ -12,8 +12,5 @@ export { WeatherSearch } from "./weather-search";
 export { ErrorDisplay } from "./error-display";
 export { LoadingSpinner } from "./loading-spinner";
 
-// Custom hooks
-export { useWeather } from "./use-weather";
-
 // Form component
 export { default as AddressForm } from "./address-form";

@@ -14,7 +14,6 @@ export const useCountries = () => {
 
         return countries;
       } catch (error) {
-        console.error(error);
         toast.error("Failed to fetch countries");
         return [];
       }

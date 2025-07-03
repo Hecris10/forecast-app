@@ -1,6 +1,16 @@
-## JStack
 
-Ship high-performance Next.js apps for extremely cheap
+# Forecast App
+
+A modern weather forecast application built with Next.js, featuring real-time weather data, address geocoding, and search history.
+
+## Features
+
+- 🌤️ Real-time weather forecasts from National Weather Service API
+- 📍 Address geocoding with Census Bureau API
+- 📱 Responsive design with dark/light theme support
+- 🔍 Search history with user authentication
+- 🎨 Modern UI with Framer Motion animations
+- 🗄️ PostgreSQL database with Prisma ORM
 
 ## Quick Start
 
@@ -13,14 +23,14 @@ Ship high-performance Next.js apps for extremely cheap
 
 1. **Clone and install dependencies:**
    ```bash
-   git clone <your-repo>
+   git clone https://github.com/Hecris10/forecast-app.git
    cd forecast-app
    bun install
    ```
 
 2. **Create environment file:**
    ```bash
-   cp .env.example .env.local
+   cp .env
    ```
 
 3. **Start the database:**
@@ -75,3 +85,13 @@ bun run db:migrate:dev
 ```bash
 bun run reset:dev
 ```
+
+## Tech Stack
+
+- **Frontend:** Next.js 15, React 19, TypeScript
+- **Styling:** Tailwind CSS, Framer Motion
+- **Backend:** Hono, JStack
+- **Database:** PostgreSQL with Prisma ORM
+- **Authentication:** Better Auth
+- **State Management:** TanStack Query
+- **UI Components:** Radix UI, shadcn/ui

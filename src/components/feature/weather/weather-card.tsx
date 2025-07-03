@@ -9,7 +9,6 @@ interface WeatherCardProps {
 }
 
 export function WeatherCard({ period, dayIndex, unit }: WeatherCardProps) {
-  // Convert temperature if needed
   const temp =
     unit === "C"
       ? Math.round(((period.temperature - 32) * 5) / 9)

@@ -1,5 +1,5 @@
 {
-  "name": "jsstack-template",
+  "name": "forecast-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,8 +18,8 @@
     "docker:restart": "docker-compose restart",
     "docker:logs": "docker-compose logs -f",
     "docker:clean": "docker-compose down -v --remove-orphans",
-    "setup:dev": "npm run docker:up && npm run db:generate && npm run db:migrate:dev",
-    "reset:dev": "npm run docker:clean && npm run setup:dev"
+    "setup:dev": "bun run docker:up && bun run db:generate && bun run db:migrate:dev",
+    "reset:dev": "bun run docker:clean && bun run setup:dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

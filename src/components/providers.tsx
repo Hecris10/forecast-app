@@ -18,7 +18,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
         queryCache: new QueryCache({
           onError: (err) => {
             if (err instanceof HTTPException) {
-              // global error handling, e.g. toast notification ...
+              // Global error handling for HTTP exceptions
             }
           },
         }),

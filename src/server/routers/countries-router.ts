@@ -26,7 +26,6 @@ export const countriesRouter = j.router({
 
       return c.superjson(countries);
     } catch (error) {
-      console.error("Error fetching countries:", error);
       throw new Error("Failed to fetch countries");
     }
   }),

@@ -76,7 +76,6 @@ export const weatherRouter = j.router({
               },
             });
           } catch (historyError) {
-            console.error("Error saving history:", historyError);
             // Don't fail the weather request if history saving fails
           }
         }
@@ -87,7 +86,6 @@ export const weatherRouter = j.router({
           cached: false,
         });
       } catch (error) {
-        console.error("Weather forecast error:", error);
         throw new Error(
           `Weather forecast failed: ${
             error instanceof Error ? error.message : "Unknown error"
@@ -113,7 +111,6 @@ export const weatherRouter = j.router({
         data: history,
       });
     } catch (error) {
-      console.error("Error fetching history:", error);
       throw new Error(
         `Failed to fetch history: ${
           error instanceof Error ? error.message : "Unknown error"
@@ -150,7 +147,6 @@ export const weatherRouter = j.router({
           success: true,
         });
       } catch (error) {
-        console.error("Error deleting history:", error);
         throw new Error(
           `Failed to delete history: ${
             error instanceof Error ? error.message : "Unknown error"

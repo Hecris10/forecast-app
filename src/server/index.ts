@@ -1,6 +1,6 @@
 import { InferRouterInputs, InferRouterOutputs } from "jstack";
 import { j } from "./jstack";
-import { countriesRouter } from "./routers/coutries-router";
+import { countriesRouter } from "./routers/countries-router";
 import { geocodeRouter } from "./routers/geocode-router";
 import { weatherRouter } from "./routers/weather-router";
 

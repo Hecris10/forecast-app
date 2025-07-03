@@ -78,7 +78,6 @@ export const geocodeRouter = j.router({
           addressComponents: data.result.addressComponents,
         });
       } catch (error) {
-        console.error("Geocoding error:", error);
         return c.json(
           {
             error: `Geocoding failed: ${
@@ -89,46 +88,4 @@ export const geocodeRouter = j.router({
         );
       }
     }),
-
-  // validateAddress: publicProcedure
-  //   .input(
-  //     z.object({
-  //       street: z.string().min(1, "Street is required"),
-  //     })
-  //   )
-  //   .query(async ({ c, input }) => {
-  //     try {
-  //       const { address } = input;
-
-  //       const geocodeResponse = await getGeocode(address);
-
-  //       if (!geocodeResponse.ok) {
-  //         return c.superjson({
-  //           valid: false,
-  //           error: `API error: ${geocodeResponse.status}`,
-  //         });
-  //       }
-
-  //       const geocodeData = (await geocodeResponse.json()) as CensusGeocodeResponse;
-
-  //       const addressMatches = geocodeData.result.addressMatches || [];
-  //       const isValid = addressMatches.length > 0;
-
-  //       if (isValid) {
-  //         throw new Error("Address is not valid");
-  //       }
-
-  //       return c.superjson({
-  //         valid: isValid,
-  //         suggestions: isValid
-  //           ? addressMatches.slice(0, 3).map((match) => match.matchedAddress)
-  //           : [],
-  //       });
-  //     } catch (error) {
-  //       return c.superjson({
-  //         valid: false,
-  //         error: error instanceof Error ? error.message : "Unknown error",
-  //       });
-  //     }
-  //   }),
 });
