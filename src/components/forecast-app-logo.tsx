@@ -17,7 +17,7 @@ export const ForecastAppLogo = ({
           "text-4xl font-bold text-gray-900 dark:text-gray-50 my-auto",
           size === "sm" && "text-2xl",
           size === "md" && "text-4xl",
-          size === "lg" && "text-6xl"
+          size === "lg" && "text-4xl md:text-6xl"
         )}
       >
         Forecast App
@@ -25,8 +25,8 @@ export const ForecastAppLogo = ({
       <ThermometerSnowflake
         className={cn(
           "w-6 h-6 my-auto animate-pulse",
-          size === "sm" && "w-4 h-4",
-          size === "md" && "w-6 h-6",
+          size === "sm" && "w-6 h-6",
+          size === "md" && "w-8 h-8",
           size === "lg" && "w-12 h-12"
         )}
       />
