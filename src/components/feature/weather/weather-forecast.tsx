@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { MotionDiv } from "@/components/ui/motion";
 import { CensusGeocodeAddressMatch } from "@/server/services/geocode";
 import { MapPin, Thermometer } from "lucide-react";
 import { TemperatureUnit, WeatherForecastData, WeatherPeriod } from "./types";
@@ -23,10 +24,52 @@ export function WeatherForecast({
 
   const periods = forecastData.data.properties.periods.slice(0, 7);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 20 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+      },
+    },
+  };
+
   return (
-    <div className="space-y-6">
+    <MotionDiv
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header Section */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50">
+      <MotionDiv
+        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50"
+        variants={itemVariants}
+      >
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           {/* Location and Title */}
           <div className="space-y-2">
@@ -81,22 +124,25 @@ export function WeatherForecast({
             </div>
           </div>
         </div>
-      </div>
+      </MotionDiv>
 
       {/* Weather Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <MotionDiv
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 items-stretch"
+        variants={itemVariants}
+      >
         {periods.map((period: WeatherPeriod, idx: number) => (
-          <WeatherCard
-            key={period.number}
-            period={period}
-            dayIndex={idx}
-            unit={unit}
-          />
+          <MotionDiv key={period.number} variants={cardVariants} custom={idx}>
+            <WeatherCard period={period} dayIndex={idx} unit={unit} />
+          </MotionDiv>
         ))}
-      </div>
+      </MotionDiv>
 
       {/* Footer Info */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800/50 dark:to-gray-700/50 backdrop-blur-sm rounded-xl p-4 border border-blue-200/30 dark:border-gray-600/30">
+      <MotionDiv
+        className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800/50 dark:to-gray-700/50 backdrop-blur-sm rounded-xl p-4 border border-blue-200/30 dark:border-gray-600/30"
+        variants={itemVariants}
+      >
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Weather data provided by National Weather Service API
@@ -106,7 +152,7 @@ export function WeatherForecast({
             {new Date().toLocaleTimeString()}
           </p>
         </div>
-      </div>
-    </div>
+      </MotionDiv>
+    </MotionDiv>
   );
 }

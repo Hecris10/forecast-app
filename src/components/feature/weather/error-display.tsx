@@ -1,52 +1,46 @@
-import { Button } from "@/components/ui/button";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { MotionDiv } from "@/components/ui/motion";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 interface ErrorDisplayProps {
-  message?: string;
-  fallbackMessage?: string;
+  error: string;
   onRetry?: () => void;
-  showRetry?: boolean;
 }
 
-export function ErrorDisplay({
-  message,
-  fallbackMessage = "An error occurred. Please try again.",
-  onRetry,
-  showRetry = true,
-}: ErrorDisplayProps) {
-  const displayMessage = message || fallbackMessage;
-
+export function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
   return (
-    <div className="bg-red-50/80 dark:bg-red-950/20 backdrop-blur-md rounded-lg p-6 border border-red-200 dark:border-red-800">
-      <div className="flex flex-col items-center gap-4 text-center">
-        {/* Error Icon */}
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-          <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+    <MotionDiv
+      className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="flex items-start gap-3">
+        <div className="p-1.5 bg-red-100 dark:bg-red-900/30 rounded-lg flex-shrink-0">
+          <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
         </div>
-
-        {/* Error Message */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">
-            Oops! Something went wrong
+        <div className="flex-1">
+          <h3 className="text-sm font-medium text-red-800 dark:text-red-200 mb-1">
+            Error
           </h3>
-          <p className="text-sm text-red-700 dark:text-red-300 max-w-md">
-            {displayMessage}
-          </p>
+          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+          {onRetry && (
+            <MotionDiv
+              className="mt-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <button
+                onClick={onRetry}
+                className="inline-flex items-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Try again
+              </button>
+            </MotionDiv>
+          )}
         </div>
-
-        {/* Retry Button */}
-        {showRetry && onRetry && (
-          <Button
-            onClick={onRetry}
-            variant="outline"
-            size="sm"
-            className="border-red-300 text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/30"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Try Again
-          </Button>
-        )}
       </div>
-    </div>
+    </MotionDiv>
   );
 }

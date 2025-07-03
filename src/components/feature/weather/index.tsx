@@ -36,12 +36,10 @@ export function Weather() {
       {isErrorFindAddresses && (
         <div className="mt-8">
           <ErrorDisplay
-            message={addressErrorMessage || undefined}
-            onRetry={() => {
-              // Retry the last search if we have the form data
-              // This would need to be implemented with form state management
-            }}
-            showRetry={false}
+            error={
+              addressErrorMessage ||
+              "An error occurred while searching for addresses."
+            }
           />
         </div>
       )}
@@ -59,6 +57,7 @@ export function Weather() {
             <AddressResults
               addresses={addresses.addressesList}
               selectedAddress={null}
+              isLoading={false}
             />
           </div>
         )}
@@ -73,10 +72,7 @@ export function Weather() {
         addresses.addressesList &&
         addresses.addressesList.length === 0 && (
           <div className="mt-8">
-            <ErrorDisplay
-              message="No addresses found for this search. Please try a different address."
-              showRetry={false}
-            />
+            <ErrorDisplay error="No addresses found for this search. Please try a different address." />
           </div>
         )}
 
