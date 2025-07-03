@@ -2,8 +2,12 @@ import { Button } from "@/components/ui/button";
 import { MotionDiv } from "@/components/ui/motion";
 import { CensusGeocodeAddressMatch } from "@/server/services/geocode";
 import { MapPin, Thermometer } from "lucide-react";
-import { TemperatureUnit, WeatherForecastData, WeatherPeriod } from "./types";
-import { WeatherCard } from "./weather-card";
+import {
+  TemperatureUnit,
+  WeatherForecastData,
+  WeatherPeriod,
+} from "../weather/types";
+import { WeatherCard } from "../weather/weather-card";
 
 interface WeatherForecastProps {
   forecastData: WeatherForecastData;

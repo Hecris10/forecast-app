@@ -170,6 +170,7 @@ export default function SearchHistory() {
                 <div className="space-y-3 p-4">
                   {filteredHistory.map((item: History, index: number) => (
                     <HistoryItem
+                      key={item.id}
                       historyItem={item}
                       index={index}
                       handleDeleteClick={() => handleDeleteClick(item)}

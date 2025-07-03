@@ -2,9 +2,9 @@
 export { Weather } from "./index";
 
 // Sub-components
+export { WeatherForecast } from "../forecast/weather-forecast";
 export { AddressResults } from "./address-results";
 export { WeatherCard } from "./weather-card";
-export { WeatherForecast } from "./weather-forecast";
 export { WeatherHeader } from "./weather-header";
 export { WeatherSearch } from "./weather-search";
 

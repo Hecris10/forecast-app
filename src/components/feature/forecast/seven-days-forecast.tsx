@@ -1,12 +1,12 @@
 "use client";
 
+import { WeatherForecast } from "@/components/feature/forecast/weather-forecast";
 import { ErrorDisplay } from "@/components/feature/weather/error-display";
 import { LoadingSpinner } from "@/components/feature/weather/loading-spinner";
 import {
   TemperatureUnit,
   WeatherForecastData,
 } from "@/components/feature/weather/types";
-import { WeatherForecast } from "@/components/feature/weather/weather-forecast";
 import { useForecast } from "@/hooks/use-forecast";
 import { CensusGeocodeAddressMatch } from "@/server/services/geocode";
 import { useSearchParams } from "next/navigation";
