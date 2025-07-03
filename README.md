@@ -1,5 +1,6 @@
-
 # Forecast App
+
+> ⚠️ **WARNING:** All environment variables are stored in the `.env.local` file. **Never use this file or its values in production!** It is intended for local development only. Always configure production secrets and environment variables securely and separately.
 
 A modern weather forecast application built with Next.js, featuring real-time weather data, address geocoding, and search history.
 
@@ -30,7 +31,7 @@ A modern weather forecast application built with Next.js, featuring real-time we
 
 2. **Create environment file:**
    ```bash
-   cp .env
+   cp .env.local .env
    ```
 
 3. **Start the database:**
