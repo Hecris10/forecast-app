@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Button } from "../../../musicbuff/musicbuff-beta-signup/src/components/ui/button";
+import { Button } from "./ui/button";
 
 export const ThemeSwitcher = ({ label }: { label?: string }) => {
   const { theme, setTheme } = useTheme();
